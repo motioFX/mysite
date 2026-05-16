@@ -46,6 +46,25 @@ def main():
             print("  ...")
             break
 
+    # Output PCA Loadings for PC1 and PC2
+    print("\nPCA Loadings (Eigenvectors) for PC1 and PC2:")
+    print("--------------------------------------------")
+    loadings = pd.DataFrame(
+        pca.components_.T,
+        columns=[f'PC{i+1}' for i in range(pca.components_.shape[0])],
+        index=close_prices.columns
+    )
+    # Print the sorted loadings for PC1 and PC2 to see which assets contribute most
+    print("Top contributors to PC1 (absolute value):")
+    pc1_sorted = loadings['PC1'].abs().sort_values(ascending=False)
+    for asset in pc1_sorted.index:
+        print(f"  {asset}: {loadings.loc[asset, 'PC1']:.4f}")
+
+    print("\nTop contributors to PC2 (absolute value):")
+    pc2_sorted = loadings['PC2'].abs().sort_values(ascending=False)
+    for asset in pc2_sorted.index:
+        print(f"  {asset}: {loadings.loc[asset, 'PC2']:.4f}")
+
     # Example: How to get the transformed data (principal components)
     pca_data = pca.transform(scaled_data)
     pca_df = pd.DataFrame(
